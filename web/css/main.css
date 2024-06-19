@@ -1,0 +1,60 @@
+body {
+    background-color: #121212;
+    color: white;
+}
+
+.card {
+    background-color: #1c1c1c;
+    border: none;
+}
+
+.card-header, .card-footer {
+    background-color: #1c1c1c;
+    border: none;
+}
+
+input[type="number"] {
+    background-color: #1c1c1c;
+    border: 1px solid #555;
+    color: white;
+}
+
+input[type="range"] {
+    width: 100%;
+}
+
+.list-group-item {
+    border: none;
+}
+
+.btn-outline-light {
+    color: white;
+    border-color: #555;
+}
+
+.btn-outline-light:hover {
+    background-color: #555;
+}
+
+.btn-light {
+    color: #121212;
+    background-color: #f8f9fa;
+}
+
+.btn-light:hover {
+    background-color: #e2e6ea;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+#dice {
+    width: 100px;
+    height: 100px;
+}

@@ -1,0 +1,112 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Players
+{% endblock %}
+
+{% block content %}
+<div class="page-wrapper">
+    <!-- ============================================================== -->
+    <!-- Bread crumb and right sidebar toggle -->
+    <!-- ============================================================== -->
+    <div class="page-breadcrumb">
+        <div class="row align-items-center">
+            <div class="col-md-6 col-8 align-self-center">
+                <h3 class="page-title mb-0 p-0">Joueurs</h3>
+                <div class="d-flex align-items-center">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="#">Acceuil</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Joueurs</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-4 align-self-center">
+            <div class="text-end upgrade-btn">
+                <button
+                    class="btn btn-danger d-none d-md-inline-block text-white" data-bs-toggle="modal" data-bs-target="#create-button">
+                    Ajouter un joueur
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Bread crumb and right sidebar toggle -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Container fluid  -->
+    <!-- ============================================================== -->
+    <div class="container-fluid">
+        <!-- ============================================================== -->
+        <!-- Start Page Content -->
+        <!-- ============================================================== -->
+        <div class="row">
+            <!-- column -->
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Liste de Joueurs</h4>
+                        <div class="table-responsive">
+                            <table class="table user-table">
+                                <thead>
+                                    <tr>
+                                        <th class="border-top-0">#</th>
+                                        <th class="border-top-0">Username</th>
+                                        <th class="border-top-0">Created At</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for player in data %}
+                                        <tr>
+                                            <td>{{player.id}}</td>
+                                            <td>{{player.name}}</td>
+                                            <td>{{player.created_at}}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- End PAge Content -->
+        <!-- ============================================================== -->
+       
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Container fluid  -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="create-button" tabindex="-1" aria-labelledby="create-button" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title text-dark fs-5" id="create-button">Nouveau joueur</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ url_for('players' ) }}" method="post">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col">
+                            <label for="player-name" class="form-label text-muted">Nom du joueur</label>
+                            <input type="text" class="form-control" name="name" id="player-name" placeholder="username" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
