@@ -3,7 +3,7 @@
   "info": {
     "description": "API documentation for Defences Game",
     "version": "1.0.0",
-    "title": "Defences Game API"
+    "title": "Roll Dice Game API"
   },
   "host": "localhost:5000",
   "basePath": "/",
@@ -220,6 +220,105 @@
           },
           "404": {
             "description": "Game not found"
+          }
+        }
+      }
+    },
+    "/configuration": {
+      "get": {
+        "tags": [
+          "configuration"
+        ],
+        "summary": "Get game configuration",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "default_dice_count": {
+                  "type": "integer"
+                },
+                "max_games_per_session": {
+                  "type": "integer"
+                },
+                "max_sessions": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No configuration found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "configuration"
+        ],
+        "summary": "Create game configuration",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Configuration object",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "default_dice_count": {
+                  "type": "integer"
+                },
+                "max_games_per_session": {
+                  "type": "integer"
+                },
+                "max_sessions": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Configuration created"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "configuration"
+        ],
+        "summary": "Update game configuration",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Configuration object",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "default_dice_count": {
+                  "type": "integer"
+                },
+                "max_games_per_session": {
+                  "type": "integer"
+                },
+                "max_sessions": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Configuration updated"
+          },
+          "404": {
+            "description": "No configuration found"
           }
         }
       }

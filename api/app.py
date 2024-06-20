@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 from flask_restful import Api, Resource
-from models import db, Player, Game
-from resources import PlayerResource, SessionResource, GameResource
+from models import db, Player, Game, Configuration
+from resources import PlayerResource, SessionResource, GameResource, ConfigurationResource
 from swagger import swagger_ui_blueprint, SWAGGER_URL
 from flask_migrate import Migrate
 
@@ -20,6 +20,7 @@ api = Api(app)
 api.add_resource(PlayerResource, '/players', '/players/<int:player_id>')
 api.add_resource(SessionResource, '/sessions', '/sessions/<int:session_id>')
 api.add_resource(GameResource, '/games', '/games/<int:game_id>')
+api.add_resource(ConfigurationResource, '/configuration')
 
 @app.route('/')
 def home():
@@ -41,7 +42,9 @@ def games():
 
 @app.route('/settings')
 def settings():
-    return render_template('settings.html')
+    config = Configuration.query.first()
+    data=  config.serialize()
+    return render_template('settings.html', data=data)
 
 @app.errorhandler(404)
 def page_not_found(e):

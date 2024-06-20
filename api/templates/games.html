@@ -55,12 +55,12 @@
                                 <tbody>
                                     {% for game in data %}
                                         <tr>
-                                            <td>{{player.id}}</td>
-                                            <td>{{player.session_id}}</td>
-                                            <td>{{player.player_id}}</td>
-                                            <td>{{player.score}}</td>
-                                            <td>{{player.start_date}}</td>
-                                            <td>{{player.end_date}}</td>
+                                            <td>{{game.id}}</td>
+                                            <td>{{game.session_id}}</td>
+                                            <td>{{game.player_id}}</td>
+                                            <td>{{game.score}}</td>
+                                            <td>{{game.start_date}}</td>
+                                            <td>{{game.end_date}}</td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>
