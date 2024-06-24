@@ -29,11 +29,10 @@ class Session(db.Model):
     creator_id = db.Column(db.Integer, db.ForeignKey('player.id'), nullable=False)
     players = db.relationship('Player', secondary='session_players', backref=db.backref('sessions', lazy=True))
 
-    def __init__(self, start_date, end_date, creator_id, players)-> None:
+    def __init__(self, start_date, end_date, creator_id)-> None:
         self.start_date = start_date
         self.end_date = end_date
         self.creator_id = creator_id
-        self.players = players
 
     def serialize(self):
         start = ""
@@ -44,7 +43,6 @@ class Session(db.Model):
             end = self.end_date.strftime('%Y-%m-%d %H:%M:%S')
         return {
             'id': self.id,
-            'players': self.players,
             'creator_id': self.creator_id,
             'start_date': start,
             'end_date': end

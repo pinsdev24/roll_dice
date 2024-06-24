@@ -46,6 +46,14 @@ def settings():
     data=  config.serialize()
     return render_template('settings.html', data=data)
 
+@app.route('/get_player/<username>')
+def get_user_by_name(username):
+    player = Player.query.filter_by(name=username).first()
+    if player:
+        return player.serialize(), 200
+    else:
+        return {}, 200
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('pages-error-404.html'), 404

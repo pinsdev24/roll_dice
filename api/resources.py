@@ -8,8 +8,9 @@ player_parser.add_argument('name', type=str, required=True, help="Name of the pl
 
 class PlayerResource(Resource):
     def get(self, player_id=None):
-        if player_id:
-            player = Player.query.get(player_id)
+        print(request.args)
+        if player_id in request.args:
+            player = Player.query.get(request.args.get('player_id'))
             
             if player:
                 return player.serialize(), 200
@@ -23,7 +24,7 @@ class PlayerResource(Resource):
             player = Player(name=request.form['name'], created_at=datetime.now())
         else:
             args = player_parser.parse_args()
-            player = Player(name=args['name'])
+            player = Player(name=args['name'], created_at=datetime.now())
 
         db.session.add(player)
         db.session.commit()
@@ -57,7 +58,7 @@ class SessionResource(Resource):
 
     def post(self):
         args = session_parser.parse_args()
-        session = Session(start_date=args['start_date'], end_date=args.get('end_date'), creator_id=args['creator_id'])
+        session = Session(start_date=datetime.utcnow(), end_date=None, creator_id=args['creator_id'],)
         db.session.add(session)
         if args['players']:
             for player_id in args['players']:
@@ -66,6 +67,17 @@ class SessionResource(Resource):
                     session.players.append(player)
         db.session.commit()
         return {'message': 'Session created', 'id': session.id}, 201
+
+    def put(self):
+        args = session_parser.parse_args()
+        session_id = args['session_id']
+        
+        session = Session.query.get(session_id)
+        if session:
+            session.end_date = datetime.utcnow()
+            db.session.commit()
+            return {'message': 'Session updated', 'id': session.id}, 200
+        return {'message': 'Session not found'}, 404
 
 game_parser = reqparse.RequestParser()
 game_parser.add_argument('start_date', type=str, required=True)
@@ -109,7 +121,6 @@ class ConfigurationResource(Resource):
     def post(self):
         if request.form.get('_method') == 'PUT':
             return self.put()
-        print('HERE POST')
         data = request.get_json()
         config = Configuration(
             default_dice_count=data['default_dice_count'],

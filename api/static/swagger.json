@@ -128,6 +128,36 @@
             "description": "Session created"
           }
         }
+      },
+      "put": {
+        "tags": [
+          "session"
+        ],
+        "summary": "Update session",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Session object",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "session_id": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "session updated"
+          },
+          "404": {
+            "description": "No session found"
+          }
+        }
       }
     },
     "/sessions/{session_id}": {
