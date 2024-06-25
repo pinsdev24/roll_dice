@@ -3,6 +3,7 @@ const express = require('express');
 const session = require('express-session');
 const path = require('path');
 const axios = require('axios');
+const { log } = require('console');
 const app = express();
 
 // Configuration de l'application
@@ -15,7 +16,10 @@ app.use(express.json());
 app.use(session({
   secret: 'votre_secret_ici',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 30*60*1000
+  }
 }));
 
 // Configuration de l'URL de base de l'API
@@ -53,12 +57,13 @@ app.post('/start-game', async (req, res) => {
       player = (await req.apiClient.post('/players', { name: visitorName })).data;
     }
 
+    const date = new Date()
     // Créer une nouvelle session
-    const session = (await req.apiClient.post('/sessions', { creator_id: player.id, players: [player.id] })).data;
+    const session = (await req.apiClient.post('/sessions', { start_date: date.toISOString(), creator_id: player.id, players: [player.id] })).data;
     req.session.playerId = player.id;
     req.session.sessionId = session.id;
 
-    res.render('game', { player, session, games });
+    res.redirect(`/game?sessionId=${session.id}&name=${player.name}`);
   } catch (error) {
     console.error('Erreur lors du démarrage du jeu:', error);
     res.status(500).send('Une erreur est survenue lors du démarrage du jeu');
@@ -71,12 +76,11 @@ app.get('/game', async (req, res) => {
     return res.redirect('/');
   }
 
-  try {
-    const player = (await req.apiClient.get(`/players/${req.session.playerId}`)).data;
-    const session = (await req.apiClient.get(`/sessions/${req.session.sessionId}`)).data;
-    const games = (await req.apiClient.get('/games', { params: { sessionId: req.session.sessionId } })).data;
+  const sessionId = req.query.sessionId;
+  const playerName = req.query.name;
 
-    res.render('game', { player, session, games });
+  try {
+    res.render('game', { sessionId, playerName });
   } catch (error) {
     console.error('Erreur lors du chargement du jeu:', error);
     res.status(500).send('Une erreur est survenue lors du chargement du jeu');
@@ -90,8 +94,11 @@ app.post('/roll-dice', async (req, res) => {
 
   try {
     const game = (await req.apiClient.post('/games', {
-      sessionId: req.session.sessionId,
-      playerId: req.session.playerId
+      session_id: req.session.sessionId,
+      player_id: req.session.playerId,
+      score: req.body.score,
+      start_date: req.body.start,
+      end_date: req.body.end,
     })).data;
 
     res.json(game);
@@ -101,17 +108,18 @@ app.post('/roll-dice', async (req, res) => {
   }
 });
 
-app.post('/end-session', async (req, res) => {
+app.put('/end-session', async (req, res) => {
   if (!req.session.sessionId) {
     return res.status(400).json({ error: 'Session invalide' });
   }
 
   try {
+    await req.apiClient.put(`/sessions`, {session_id: req.session.sessionId});
     req.session.destroy();
-    res.status(200).json({'message': 'Session terminer'});
+    res.status(200).json({'message': 'Session terminer', 'success': true});
   } catch (error) {
     console.error('Erreur lors de la fin de session:', error);
-    res.status(500).json({ error: 'Une erreur est survenue lors de la fin de session' });
+    res.status(500).json({ error: 'Une erreur est survenue lors de la fin de session', 'success': false});
   }
 });
 

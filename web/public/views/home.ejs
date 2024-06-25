@@ -18,7 +18,9 @@
             <h1 class="mb-6">Roll Dice Game</h1>
             <div class="d-flex justify-content-center">
                 <button type="button" class="btn btn-primary btn-lg me-2" data-bs-toggle="modal" data-bs-target="#login-session" aria-current="page">Jouer Maintenant</button>
-                <button type="button" class="btn btn-secondary btn-lg">Jouer en tant que visiteur</button>
+                <form action="/start-game" method="post">
+                    <button type="submit" class="btn btn-secondary btn-lg">Jouer en tant que visiteur</button>
+                </form>
             </div>
         </div>
     </div>

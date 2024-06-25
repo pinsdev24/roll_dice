@@ -1,4 +1,4 @@
-from flask import request, redirect, flash
+from flask import request, redirect, flash, make_response
 from flask_restful import Resource, reqparse
 from models import db, Player, Session, Game, Configuration
 from datetime import datetime
@@ -8,7 +8,6 @@ player_parser.add_argument('name', type=str, required=True, help="Name of the pl
 
 class PlayerResource(Resource):
     def get(self, player_id=None):
-        print(request.args)
         if player_id in request.args:
             player = Player.query.get(request.args.get('player_id'))
             
@@ -35,7 +34,7 @@ class PlayerResource(Resource):
 
 session_parser = reqparse.RequestParser()
 session_parser.add_argument('start_date', type=str, required=True, help="Start date of the session")
-session_parser.add_argument('end_date', type=str)
+#session_parser.add_argument('end_date', type=str)
 session_parser.add_argument('creator_id', type=int, required=True)
 session_parser.add_argument('players', type=list, location='json')
 
@@ -69,8 +68,9 @@ class SessionResource(Resource):
         return {'message': 'Session created', 'id': session.id}, 201
 
     def put(self):
-        args = session_parser.parse_args()
-        session_id = args['session_id']
+        
+        data = request.get_json()
+        session_id = data['session_id']
         
         session = Session.query.get(session_id)
         if session:
